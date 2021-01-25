@@ -8,7 +8,7 @@ Flask==1.1.2
 Flask-Compress==1.8.0
 matplotlib==3.3.3
 numpy==1.19.4
-pandas==1.0.0
+pandas==1.1.5
 Pillow==8.1.0
 plotly==4.14.1
 pyodbc==4.0.30
