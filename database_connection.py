@@ -8,7 +8,7 @@ def get_data_from_database(server, database, username, password):
                           ';DATABASE=' + database +
                           ';UID=' + username +
                           ';PWD=' + password)
-    sql = 'SELECT * FROM database_name.table'
+    sql = "SELECT * FROM database_name.table"
     cursor = conn.cursor()
     cursor.execute(sql)
     data = pd.read_sql(sql, conn)
@@ -16,18 +16,26 @@ def get_data_from_database(server, database, username, password):
     return data
 
 
-def get_from_db_file(df_file_path):
+def get_from_db_file(df_file_path=None):
     df_file_path = "Data\\restaurant.db"
-    conn = sqlite3.connect(df_file_path)
+    con = sqlite3.connect(df_file_path)
 
-    cursor = conn.cursor()
+    cur = con.cursor()
 
-    table_list = [a for a in cursor.execute("SELECT name FROM sqlite_master WHERE type = 'table'")]
-    print(table_list)
+    table_list = [a for a in cur.execute("SELECT name FROM sqlite_master WHERE type = 'table'")]
+    correct_tables = []
+    dfs = []
 
-    sql = 'SELECT * FROM database_name.table'
-    cursor.execute(sql)
-    data = pd.read_sql(sql, conn)
+    for i in table_list:
+        stri = ''.join(i)
+        correct_tables.append(stri)
 
-    return data
+    for table in correct_tables:
+        sql = "SELECT * FROM " + table
+        df = pd.read_sql_query(sql, con)
+        dfs.append(df)
+
+    con.close()
+
+    return dfs[1:]
 
