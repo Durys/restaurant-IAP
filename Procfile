@@ -1,1 +1,1 @@
-web: gunicorn restaurant-iap.wsgi --log-file -
+web: gunicorn app:server
