@@ -1,9 +1,10 @@
 import pandas as pd
 import sqlite3
+from main import DB_PATH
 
 
 def get_from_db_file(df_file_path=None):
-    df_file_path = "Data\\restaurant.db"
+    df_file_path = DB_PATH
     con = sqlite3.connect(df_file_path)
 
     cur = con.cursor()

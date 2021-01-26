@@ -8,10 +8,13 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import plotly.express as px
-
+from pathlib import Path
 from app import app, server
 
 ORDER_NUMBER = 4
+PANTRY_PATH = Path.cwd().joinpath('Data', 'Pantry.csv')
+ORDERS_PATH = Path.cwd().joinpath('Data', 'Orders.csv')
+DB_PATH = Path.cwd().joinpath('Data', 'restaurant.db')
 
 
 def render_graph():
@@ -29,7 +32,7 @@ def update_pantry(pantry, items):
 
 def check_pantry():
     # CHECK DATABASE
-    pantry = pd.read_csv("Data\\Pantry.csv", sep=",")
+    pantry = pd.read_csv(PANTRY_PATH, sep=",")
     pantry.columns = ["Groceries", "Quantity"]
 
     return pantry
@@ -37,7 +40,7 @@ def check_pantry():
 
 def check_orders():
     # CHECK DATABASE
-    orders = pd.read_csv("Data\\Orders.csv", sep=",")
+    orders = pd.read_csv(ORDERS_PATH, sep=",")
     orders.columns = ["Order Nr.", "Item", "Quantity"]
 
     return orders
@@ -45,7 +48,7 @@ def check_orders():
 
 def json_orders():
     # CHECK DATABASE
-    orders = pd.read_csv("Data\\Orders.csv", sep=",")
+    orders = pd.read_csv(ORDERS_PATH, sep=",")
     orders.columns = ["Order Nr.", "Item", "Quantity"]
 
     result = orders.to_json(orient="records")
@@ -286,7 +289,7 @@ def toggle_modal(open_form, add_new, name, amount):
         orders = check_orders()
         updated_orders = orders.append({"Order Nr.": ORDER_NUMBER, "Item": [name.capitalize()], "Quantity": [amount]})
         updated_orders.set_index("Order Nr.")
-        updated_orders.to_csv('Data\\Orders.csv', mode='w', header="Order Nr.,Item,Quantity")
+        updated_orders.to_csv(ORDERS_PATH, mode='w', header="Order Nr.,Item,Quantity")
 
 
 @app.callback(
@@ -322,7 +325,7 @@ def send_orders(clicked, new_name, new_amount, tomato, potato, carrot, lettuce, 
         updated_orders = add_to_order(new_name, new_amount, tomato, potato, carrot, lettuce, milk, flour, eggs, beef,
                                       chicken, fish, t_c, p_c, c_c, l_c, m_c, f_c, e_c, b_c, chick_c, fish_c)
         updated_orders = updated_orders.set_index("Order Nr.")
-        updated_orders.to_csv('Data\\Orders.csv', mode='w', header="Order Nr.,Item,Quantity")
+        updated_orders.to_csv(ORDERS_PATH, mode='w', header="Order Nr.,Item,Quantity")
         return not is_open
     return is_open
 
